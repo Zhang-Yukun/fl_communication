@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import gRPC_communicator_pb2 as gRPC__communicator__pb2
+from . import gRPC_communication_manager_pb2 as gRPC__communication__manager__pb2
 
 GRPC_GENERATED_VERSION = '1.64.1'
 GRPC_VERSION = grpc.__version__
@@ -20,7 +20,7 @@ except ImportError:
 if _version_not_supported:
     warnings.warn(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in gRPC_communicator_pb2_grpc.py depends on'
+        + f' but the generated code in gRPC_communication_manager_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -41,8 +41,8 @@ class gRPCComServeFuncStub(object):
         """
         self.sendMessage = channel.unary_unary(
                 '/gRPCComServeFunc/sendMessage',
-                request_serializer=gRPC__communicator__pb2.MessageRequest.SerializeToString,
-                response_deserializer=gRPC__communicator__pb2.MessageResponse.FromString,
+                request_serializer=gRPC__communication__manager__pb2.MessageRequest.SerializeToString,
+                response_deserializer=gRPC__communication__manager__pb2.MessageResponse.FromString,
                 _registered_method=True)
 
 
@@ -60,8 +60,8 @@ def add_gRPCComServeFuncServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'sendMessage': grpc.unary_unary_rpc_method_handler(
                     servicer.sendMessage,
-                    request_deserializer=gRPC__communicator__pb2.MessageRequest.FromString,
-                    response_serializer=gRPC__communicator__pb2.MessageResponse.SerializeToString,
+                    request_deserializer=gRPC__communication__manager__pb2.MessageRequest.FromString,
+                    response_serializer=gRPC__communication__manager__pb2.MessageResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -89,8 +89,8 @@ class gRPCComServeFunc(object):
             request,
             target,
             '/gRPCComServeFunc/sendMessage',
-            gRPC__communicator__pb2.MessageRequest.SerializeToString,
-            gRPC__communicator__pb2.MessageResponse.FromString,
+            gRPC__communication__manager__pb2.MessageRequest.SerializeToString,
+            gRPC__communication__manager__pb2.MessageResponse.FromString,
             options,
             channel_credentials,
             insecure,
