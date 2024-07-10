@@ -147,14 +147,17 @@ class Message:
             return [self.transform_to_list(each_x) for each_x in x]
         elif isinstance(x, dict):
             for key in x.keys():
-                x[key] = self.transform_to_list(x[key])
+                if self.message_type == 200 and key == "model":
+                    x[key] = self.param_serializer(x[key])
+                else:
+                    x[key] = self.transform_to_list(x[key])
             return x
         else:
             if hasattr(x, 'tolist'):
                 # if self.msg_type == 'model_para':
-                return self.param_serializer(x)
+                # return self.param_serializer(x)
                 # else:
-                # return x.tolist()
+                return x.tolist()
             else:
                 return x
 
