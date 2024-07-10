@@ -14,27 +14,30 @@ class gRPCCommunicationManager:
             ip: str = "127.0.0.1",
             port: str = "50051",
             max_connection_num: int = 1,
-            gRPC_config: dict = None
+            gRPC_config=None
     ):
+        if gRPC_config is None:
+            gRPC_config = {
+                "grpc_max_send_message_length": 300 * 1024 * 1024,
+                "grpc_max_receive_message_length": 300 * 1024 * 1024,
+                "grpc_enable_http_proxy": False,
+                "grpc_compression": "no_compression"
+            }
         self._ip = ip
         self._port = port
         self._max_connection_num = max_connection_num
         self._gRPC_config = gRPC_config
         self.server_funcs = gRPCComServeFunc()
-        if gRPC_config is not None:
-            options = [
-                ("grpc.max_send_message_length", gRPC_config["grpc_max_send_message_length"]),
-                ("grpc.max_receive_message_length", gRPC_config["grpc_max_receive_message_length"]),
-                ("grpc.enable_http_proxy", gRPC_config["grpc_enable_http_proxy"]),
-            ]
-            if gRPC_config["grpc_compression"].lower() == 'deflate':
-                self._compression_method = grpc.Compression.Deflate
-            elif gRPC_config["grpc_compression"].lower() == 'gzip':
-                self._compression_method = grpc.Compression.Gzip
-            else:
-                self._compression_method = grpc.Compression.NoCompression
+        options = [
+            ("grpc.max_send_message_length", gRPC_config["grpc_max_send_message_length"]),
+            ("grpc.max_receive_message_length", gRPC_config["grpc_max_receive_message_length"]),
+            ("grpc.enable_http_proxy", gRPC_config["grpc_enable_http_proxy"]),
+        ]
+        if gRPC_config["grpc_compression"].lower() == 'deflate':
+            self._compression_method = grpc.Compression.Deflate
+        elif gRPC_config["grpc_compression"].lower() == 'gzip':
+            self._compression_method = grpc.Compression.Gzip
         else:
-            options = None
             self._compression_method = grpc.Compression.NoCompression
         self._gRPC_server = self.serve(
             max_workers=max_connection_num,

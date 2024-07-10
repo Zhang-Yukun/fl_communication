@@ -211,8 +211,10 @@ class Message:
             return {
                 k: self._parse_model(value[k]) for k in value.keys()
             }
-        else:
+        elif isinstance(value, str):
             return pickle.loads(base64.b64decode(value))
+        else:
+            return value
 
     def parse(self, received_msg):
         self.message_type = self._parse_msg(received_msg['message_type'])
